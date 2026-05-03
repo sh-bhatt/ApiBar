@@ -83,7 +83,7 @@ export function trackUsage(req: Request, res: Response, next: NextFunction): voi
 
     const apiKeyIdStr = doc._id.toString()
     const rate = await tryConsumeHourly(apiKeyIdStr, doc.rateLimit)
-    if (!rate.ok) {
+    if (rate.ok === false) {
       res.status(429).json({
         error: 'rate_limit_exceeded',
         limit: rate.limit,
