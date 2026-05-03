@@ -277,45 +277,44 @@ export function ApisPage() {
           </div>
         )}
 
-        {/* Register API Modal */}
+        {/* Register API Modal - Full screen on mobile */}
         {showModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50 p-4">
-            <div className="w-full max-w-xl bg-white rounded-xl shadow-xl flex flex-col max-h-[80vh]">
-              <div className="p-6 border-b border-gray-200 flex-shrink-0">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50 p-0 sm:p-4">
+            <div className="w-full h-full sm:h-auto sm:max-w-xl bg-white sm:rounded-xl shadow-xl flex flex-col sm:max-h-[90vh] max-h-screen">
+              <div className="p-4 sm:p-6 border-b border-gray-200 flex-shrink-0">
                 <div className="flex items-start justify-between">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">Register New API</h3>
+                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900">Register New API</h3>
                     <p className="mt-1 text-sm text-gray-500">Add an upstream API to your account</p>
                   </div>
                   <button
                     onClick={() => setShowModal(false)}
-                    className="text-gray-400 hover:text-gray-600"
+                    className="text-gray-400 hover:text-gray-600 p-1"
                   >
                     <X className="w-5 h-5" />
                   </button>
                 </div>
               </div>
 
-              <div className="overflow-y-auto p-6 space-y-4 flex-1">
-                <form id="api-registration-form" onSubmit={onSubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      API Name
-                    </label>
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Weather API"
-                      className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
-                      required
-                    />
-                  </div>
+              <form onSubmit={onSubmit} className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    API Name
+                  </label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Weather API"
+                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
+                    required
+                  />
+                </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Base URL
-                    </label>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Base URL
+                  </label>
                     <input
                       type="text"
                       value={baseUrl}
@@ -585,8 +584,7 @@ export function ApisPage() {
                     )}
                   </div>
                 </form>
-              </div>
-              <div className="p-6 border-t border-gray-200 flex-shrink-0 bg-gray-50">
+              <div className="p-4 sm:p-6 border-t border-gray-200 flex-shrink-0 bg-gray-50">
                 <div className="flex justify-end space-x-3">
                   <button
                     type="button"

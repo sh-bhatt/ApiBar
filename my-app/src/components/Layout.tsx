@@ -13,9 +13,11 @@ import {
   ShoppingBag,
   Zap,
   Wallet,
-  TrendingUp
+  TrendingUp,
+  X
 } from 'lucide-react'
 import { TopNavbar } from './TopNavbar'
+import { useState, useEffect } from 'react'
 
 interface UserProfile {
   id: string
@@ -28,6 +30,23 @@ interface UserProfile {
 
 export function Layout() {
   const navigate = useNavigate()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  // Close sidebar on route change (mobile)
+  useEffect(() => {
+    setSidebarOpen(false)
+  }, [navigate])
+
+  // Close sidebar when clicking outside on mobile
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setSidebarOpen(false)
+      }
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const { data: profile } = useQuery({
     queryKey: ['profile'],
@@ -103,11 +122,23 @@ export function Layout() {
 
   return (
     <div className="min-h-screen bg-[#F8F7FF]">
-      {/* Fixed Sidebar */}
-      <aside className="fixed top-0 left-0 w-64 h-screen sidebar-bg z-20">
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-30 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Fixed Sidebar - Hidden on mobile by default, shown as overlay when open */}
+      <aside
+        className={`fixed top-0 left-0 w-64 h-screen sidebar-bg z-40 transform transition-transform duration-300 ease-in-out
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+          md:translate-x-0 md:block`}
+      >
         <div className="flex flex-col h-full">
           {/* Logo Section */}
-          <div className="border-b border-white/10 px-6 py-6">
+          <div className="border-b border-white/10 px-6 py-6 flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">MF</span>
@@ -117,6 +148,13 @@ export function Layout() {
                 <div className="text-xs text-white/70">usage-based billing</div>
               </div>
             </div>
+            {/* Close button for mobile */}
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="md:hidden p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
 
           {/* Navigation - takes all available space */}
@@ -187,15 +225,15 @@ export function Layout() {
       </aside>
 
       {/* Main Content Area */}
-      <div className="ml-64">
+      <div className="md:ml-64">
         {/* Fixed Top Navbar */}
-        <div className="fixed top-0 left-64 right-0 z-10 bg-white border-b border-gray-200">
-          <TopNavbar />
+        <div className="fixed top-0 left-0 right-0 md:left-64 z-10 bg-white border-b border-gray-200">
+          <TopNavbar onMenuClick={() => setSidebarOpen(true)} />
         </div>
-        
+
         {/* Page Content with padding for fixed navbar */}
         <main className="pt-16">
-          <div className="mx-auto max-w-7xl px-6 py-8">
+          <div className="mx-auto max-w-7xl px-4 md:px-6 py-6 md:py-8">
             <Outlet />
           </div>
         </main>

@@ -310,54 +310,54 @@ export function MyApisPage() {
             }
 
             return (
-              <div key={key.id} className={`card p-6 ${!isActive ? 'opacity-75' : ''}`}>
+              <div key={key.id} className={`card p-4 md:p-6 ${!isActive ? 'opacity-75' : ''}`}>
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                      <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
                         <Key className="w-5 h-5 text-purple-600" />
                       </div>
-                      <div>
-                        <h3 className="font-semibold text-gray-900">{key.name}</h3>
-                        <p className="text-sm text-gray-500">
+                      <div className="min-w-0">
+                        <h3 className="font-semibold text-gray-900 truncate">{key.name}</h3>
+                        <p className="text-sm text-gray-500 truncate">
                           Linked API: <span className={`font-medium ${key.linkedApi ? 'text-gray-700' : 'text-red-600'}`}>{key.linkedApi?.name || 'Deleted API'}</span>
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 mt-3">
-                      <code className="text-sm font-mono bg-gray-100 px-3 py-1.5 rounded text-gray-600">{key.maskedKey}</code>
+                      <code className="text-sm font-mono bg-gray-100 px-3 py-1.5 rounded text-gray-600 truncate">{key.maskedKey}</code>
                       <button
                         onClick={() => copyToClipboard(key.maskedKey)}
-                        className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                        className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors flex-shrink-0"
                       >
                         {copiedKey === key.maskedKey ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
                       </button>
                     </div>
                   </div>
-                  <div className="flex items-center gap-6 lg:border-l lg:border-gray-200 lg:pl-6">
+                  <div className="flex flex-wrap items-center gap-4 md:gap-6 lg:border-l lg:border-gray-200 lg:pl-6">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-gray-900">{key.callCount.toLocaleString()}</div>
+                      <div className="text-xl md:text-2xl font-bold text-gray-900">{key.callCount.toLocaleString()}</div>
                       <div className="text-xs text-gray-500 uppercase tracking-wider">Requests</div>
                     </div>
                     <div className="text-center">
-                      <div className={`text-2xl font-bold ${pricingType === 'free' ? 'text-green-600' : pricingType === 'monthly_flat' ? 'text-blue-600' : pricingType === 'tiered' ? 'text-purple-600' : typeof middleStatValue === 'number' && middleStatValue > 0 ? 'text-green-600' : 'text-amber-600'}`}>
+                      <div className={`text-xl md:text-2xl font-bold ${pricingType === 'free' ? 'text-green-600' : pricingType === 'monthly_flat' ? 'text-blue-600' : pricingType === 'tiered' ? 'text-purple-600' : typeof middleStatValue === 'number' && middleStatValue > 0 ? 'text-green-600' : 'text-amber-600'}`}>
                         {typeof middleStatValue === 'number' ? middleStatValue.toLocaleString() : middleStatValue}
                       </div>
                       <div className="text-xs text-gray-500 uppercase tracking-wider">{middleStatLabel}</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-gray-900">{pricePerRequestDisplay}</div>
+                      <div className="text-xl md:text-2xl font-bold text-gray-900">{pricePerRequestDisplay}</div>
                       <div className="text-xs text-gray-500 uppercase tracking-wider">{pricingType === 'monthly_flat' ? 'Monthly' : 'Per Request'}</div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     {isActive ? (
                       <>
-                        <button onClick={() => handleRotate(key.id)} disabled={rotateKey.isPending} className="px-4 py-2 text-sm font-medium text-purple-600 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50">
-                          <RefreshCw className={`w-4 h-4 ${rotateKey.isPending ? 'animate-spin' : ''}`} /> Rotate
+                        <button onClick={() => handleRotate(key.id)} disabled={rotateKey.isPending} className="px-3 py-2 text-sm font-medium text-purple-600 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50">
+                          <RefreshCw className={`w-4 h-4 ${rotateKey.isPending ? 'animate-spin' : ''}`} /> <span className="hidden sm:inline">Rotate</span>
                         </button>
-                        <button onClick={() => confirmRevoke(key.id)} disabled={deleteKey.isPending} className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50">
-                          <Trash2 className="w-4 h-4" /> Revoke
+                        <button onClick={() => confirmRevoke(key.id)} disabled={deleteKey.isPending} className="px-3 py-2 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50">
+                          <Trash2 className="w-4 h-4" /> <span className="hidden sm:inline">Revoke</span>
                         </button>
                       </>
                     ) : (
@@ -365,7 +365,7 @@ export function MyApisPage() {
                     )}
                   </div>
                 </div>
-                <div className="mt-4 flex items-center gap-2">
+                <div className="mt-4 flex items-center gap-2 flex-wrap">
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
                     {isActive ? 'Active' : 'Revoked'}
                   </span>
@@ -388,13 +388,13 @@ export function MyApisPage() {
       {/* Tab 2: My API Keys */}
       {activeTab === 'mykeys' && (
         <div className="space-y-6">
-          {/* Create Key Button */}
-          <div className="flex items-center justify-between">
+          {/* Create Key Button - Responsive layout */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input type="text" placeholder="Search API keys..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
             </div>
-            <button onClick={() => setShowCreateForm(!showCreateForm)} className="primary-btn flex items-center space-x-2 ml-4">
+            <button onClick={() => setShowCreateForm(!showCreateForm)} className="primary-btn flex items-center justify-center space-x-2 sm:ml-4">
               <Plus className="w-4 h-4" /><span>Create Key</span>
             </button>
           </div>

@@ -198,24 +198,24 @@ export function ProfilePage() {
   const maxBioLength = 200
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       <header>
-        <h1 className="text-2xl font-bold text-gray-900">Profile</h1>
+        <h1 className="text-xl md:text-2xl font-bold text-gray-900">Profile</h1>
         <p className="mt-1 text-sm text-gray-600">
           Manage your account information and preferences.
         </p>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column - Profile Info */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+        {/* Left Column - Profile Info - Centered on mobile */}
         <div className="lg:col-span-1">
-          <div className="card p-6 text-center">
-            {/* Avatar */}
+          <div className="card p-4 md:p-6 text-center">
+            {/* Avatar - Smaller on mobile */}
             <div className="relative inline-block mb-4">
               <button
                 onClick={handleAvatarClick}
                 disabled={uploading}
-                className="relative w-32 h-32 rounded-full overflow-hidden focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-offset-2 transition-all"
+                className="relative w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-offset-2 transition-all"
               >
                 {profile.avatar ? (
                   <img
@@ -274,10 +274,10 @@ export function ProfilePage() {
 
         {/* Right Column - Editable Form */}
         <div className="lg:col-span-2">
-          <div className="card p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">Profile Information</h3>
+          <div className="card p-4 md:p-6">
+            <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-4 md:mb-6">Profile Information</h3>
 
-            <div className="space-y-6">
+            <div className="space-y-4 md:space-y-6">
               {/* Full Name */}
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -290,7 +290,7 @@ export function ProfilePage() {
                     type="text"
                     value={formData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
+                    className="w-full pl-10 pr-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
                     placeholder="Enter your full name"
                   />
                 </div>

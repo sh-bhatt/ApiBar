@@ -1,8 +1,12 @@
-import { Search, Bell, ChevronDown, LogOut, AlertTriangle, AlertCircle, Info } from 'lucide-react'
+import { Search, Bell, ChevronDown, LogOut, AlertTriangle, AlertCircle, Info, Menu } from 'lucide-react'
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { api, clearStoredToken } from '../lib/api'
+
+interface TopNavbarProps {
+  onMenuClick?: () => void
+}
 
 interface UserProfile {
   id: string
@@ -24,7 +28,7 @@ interface Notification {
   link: string
 }
 
-export function TopNavbar() {
+export function TopNavbar({ onMenuClick }: TopNavbarProps = {}) {
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
   const [showNotifications, setShowNotifications] = useState(false)
@@ -100,17 +104,26 @@ export function TopNavbar() {
   }
 
   return (
-    <div className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6">
-      {/* Logo */}
+    <div className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 md:px-6">
+      {/* Left: Hamburger (mobile) + Logo */}
       <div className="flex items-center space-x-3">
+        {/* Hamburger Menu Button - Mobile only */}
+        {onMenuClick && (
+          <button
+            onClick={onMenuClick}
+            className="md:hidden p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+        )}
         <div className="w-8 h-8 gradient-bg rounded-lg flex items-center justify-center">
           <span className="text-white font-bold text-sm">MF</span>
         </div>
-        <span className="text-xl font-bold gradient-text">MeterFlow</span>
+        <span className="text-lg md:text-xl font-bold gradient-text hidden sm:block">MeterFlow</span>
       </div>
 
-      {/* Search Bar */}
-      <div className="flex-1 max-w-xl mx-8">
+      {/* Search Bar - Hidden on mobile, shown on md+ */}
+      <div className="hidden md:block flex-1 max-w-xl mx-8">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <input
@@ -122,6 +135,11 @@ export function TopNavbar() {
           />
         </div>
       </div>
+
+      {/* Mobile Search Icon */}
+      <button className="md:hidden p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
+        <Search className="w-5 h-5" />
+      </button>
 
       {/* Right Side */}
       <div className="flex items-center space-x-4">
@@ -194,7 +212,7 @@ export function TopNavbar() {
           {profile && (
             <button
               onClick={() => setShowProfile(!showProfile)}
-              className="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="flex items-center space-x-2 md:space-x-3 p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-[#6C63FF] to-[#3B82F6] flex items-center justify-center">
                 {profile?.avatar ? (
@@ -211,7 +229,8 @@ export function TopNavbar() {
                   </span>
                 )}
               </div>
-              <div className="text-left">
+              {/* User name hidden on mobile */}
+              <div className="text-left hidden md:block">
                 <p className="text-sm font-medium text-gray-900">{profile?.name || 'User'}</p>
                 <div className="flex items-center space-x-1">
                   <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
@@ -223,7 +242,7 @@ export function TopNavbar() {
                   </span>
                 </div>
               </div>
-              <ChevronDown className="w-4 h-4 text-gray-500" />
+              <ChevronDown className="w-4 h-4 text-gray-500 hidden md:block" />
             </button>
           )}
 

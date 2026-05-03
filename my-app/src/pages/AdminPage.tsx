@@ -168,52 +168,52 @@ export function AdminPage() {
         </p>
       </header>
 
-      {/* Platform Stats */}
+      {/* Platform Stats - 2 cols mobile, 4 cols desktop */}
       {stats && (
         <section>
-          <div className="mb-6">
-            <h2 className="text-lg font-semibold text-gray-900">Platform Statistics</h2>
+          <div className="mb-4 md:mb-6">
+            <h2 className="text-base md:text-lg font-semibold text-gray-900">Platform Statistics</h2>
             <p className="mt-1 text-sm text-gray-600">
               Overview of platform usage and user distribution.
             </p>
           </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="card p-6">
-              <div className="flex items-center gap-3">
-                <Users className="w-8 h-8 text-purple-600" />
+          <div className="grid gap-3 md:gap-6 grid-cols-2 lg:grid-cols-4">
+            <div className="card p-3 md:p-6">
+              <div className="flex items-center gap-2 md:gap-3">
+                <Users className="w-6 h-6 md:w-8 md:h-8 text-purple-600" />
                 <div>
-                  <div className="text-2xl font-bold text-gray-900">{stats.totalUsers}</div>
-                  <div className="text-sm text-gray-600">Total Users</div>
-                  <div className="text-xs text-gray-400 mt-1">
-                    {stats.totalProviders} Providers · {stats.totalConsumers} Consumers · {stats.totalAdmins} Admins
+                  <div className="text-lg md:text-2xl font-bold text-gray-900">{stats.totalUsers}</div>
+                  <div className="text-xs md:text-sm text-gray-600">Total Users</div>
+                  <div className="text-xs text-gray-400 mt-1 hidden sm:block">
+                    {stats.totalProviders} Providers · {stats.totalConsumers} Consumers
                   </div>
                 </div>
               </div>
             </div>
-            <div className="card p-6">
-              <div className="flex items-center gap-3">
-                <RefreshCw className="w-8 h-8 text-blue-600" />
+            <div className="card p-3 md:p-6">
+              <div className="flex items-center gap-2 md:gap-3">
+                <RefreshCw className="w-6 h-6 md:w-8 md:h-8 text-blue-600" />
                 <div>
-                  <div className="text-2xl font-bold text-gray-900">{stats.totalRequests.toLocaleString()}</div>
-                  <div className="text-sm text-gray-600">Total Requests</div>
+                  <div className="text-lg md:text-2xl font-bold text-gray-900">{stats.totalRequests.toLocaleString()}</div>
+                  <div className="text-xs md:text-sm text-gray-600">Total Requests</div>
                 </div>
               </div>
             </div>
-            <div className="card p-6">
-              <div className="flex items-center gap-3">
-                <Shield className="w-8 h-8 text-green-600" />
+            <div className="card p-3 md:p-6">
+              <div className="flex items-center gap-2 md:gap-3">
+                <Shield className="w-6 h-6 md:w-8 md:h-8 text-green-600" />
                 <div>
-                  <div className="text-2xl font-bold text-gray-900">{stats.totalApis}</div>
-                  <div className="text-sm text-gray-600">APIs Registered</div>
+                  <div className="text-lg md:text-2xl font-bold text-gray-900">{stats.totalApis}</div>
+                  <div className="text-xs md:text-sm text-gray-600">APIs Registered</div>
                 </div>
               </div>
             </div>
-            <div className="card p-6">
-              <div className="flex items-center gap-3">
-                <Users className="w-8 h-8 text-orange-600" />
+            <div className="card p-3 md:p-6">
+              <div className="flex items-center gap-2 md:gap-3">
+                <Users className="w-6 h-6 md:w-8 md:h-8 text-orange-600" />
                 <div>
-                  <div className="text-2xl font-bold text-gray-900">₹{stats.totalRevenue.toLocaleString()}</div>
-                  <div className="text-sm text-gray-600">Total Revenue</div>
+                  <div className="text-lg md:text-2xl font-bold text-gray-900">₹{stats.totalRevenue.toLocaleString()}</div>
+                  <div className="text-xs md:text-sm text-gray-600">Total Revenue</div>
                 </div>
               </div>
             </div>
@@ -221,11 +221,11 @@ export function AdminPage() {
         </section>
       )}
 
-      {/* Revenue Stats */}
+      {/* Revenue Stats - 2 cols mobile, 4 cols desktop */}
       {revenue && (
         <section>
-          <div className="mb-6">
-            <h2 className="text-lg font-semibold text-gray-900">Revenue Overview</h2>
+          <div className="mb-4 md:mb-6">
+            <h2 className="text-base md:text-lg font-semibold text-gray-900">Revenue Overview</h2>
             <p className="mt-1 text-sm text-gray-600">
               Platform revenue and provider payouts.
             </p>
@@ -236,7 +236,7 @@ export function AdminPage() {
               Platform commission: <span className="font-semibold">{(revenue.commissionRate * 100).toFixed(0)}%</span>
             </span>
           </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-3 md:gap-6 grid-cols-2 lg:grid-cols-4">
             <div className="card p-6">
               <div className="flex items-center gap-3">
                 <TrendingUp className="w-8 h-8 text-green-600" />
@@ -277,15 +277,15 @@ export function AdminPage() {
         </section>
       )}
 
-      {/* Users Table */}
+      {/* Users Table - Scrollable on mobile */}
       <section>
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold text-gray-900">User Management</h2>
+        <div className="mb-4 md:mb-6">
+          <h2 className="text-base md:text-lg font-semibold text-gray-900">User Management</h2>
           <p className="mt-1 text-sm text-gray-600">
             View and manage all registered users.
           </p>
         </div>
-        
+
         <div className="card overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">

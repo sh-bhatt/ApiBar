@@ -73,8 +73,8 @@ export function DashboardPage() {
         </p>
       </header>
 
-      {/* Animated Stat Cards */}
-      <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Animated Stat Cards - 2 cols mobile, 4 cols desktop */}
+      <section className="grid gap-4 md:gap-6 grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Total Requests"
           value={s.totalCalls}
@@ -93,14 +93,20 @@ export function DashboardPage() {
           icon={Clock}
           color="success"
         />
+        <StatCard
+          title="Success Rate"
+          value={`${successRate.toFixed(1)}%`}
+          icon={Activity}
+          color="success"
+        />
       </section>
 
-      {/* Live Traffic Chart */}
-      <section>
+      {/* Live Traffic Chart - Full width, scrollable on mobile */}
+      <section className="overflow-x-auto">
         <TrafficChart data={trafficData.data || []}>
           {/* Filter Tabs */}
-          <div className="mb-6">
-            <div className="flex space-x-1">
+          <div className="mb-4 md:mb-6">
+            <div className="flex flex-wrap gap-2">
               {[
                 { value: 'hour', label: 'Hour' },
                 { value: 'day', label: 'Day' },
@@ -110,7 +116,7 @@ export function DashboardPage() {
                 <button
                   key={range.value}
                   onClick={() => setActiveRange(range.value as any)}
-                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  className={`px-3 py-2 text-xs md:text-sm font-medium rounded-lg transition-colors flex-1 md:flex-none ${
                     activeRange === range.value
                       ? 'bg-purple-600 text-white'
                       : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
@@ -124,15 +130,15 @@ export function DashboardPage() {
         </TrafficChart>
       </section>
 
-      {/* Progress Indicators */}
+      {/* Progress Indicators - 1 col mobile, 3 cols desktop */}
       <section>
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold text-gray-900">Performance Metrics</h2>
+        <div className="mb-4 md:mb-6">
+          <h2 className="text-base md:text-lg font-semibold text-gray-900">Performance Metrics</h2>
           <p className="mt-1 text-sm text-gray-600">
             Real-time performance indicators for your APIs.
           </p>
         </div>
-        <div className="grid gap-6 sm:grid-cols-3">
+        <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-3">
           <ProgressIndicator
             title="Success Rate"
             value={successRate}
@@ -157,8 +163,8 @@ export function DashboardPage() {
         </div>
       </section>
 
-      {/* Current Bill */}
-      <section className="card p-6">
+      {/* Current Bill - Responsive padding */}
+      <section className="card p-4 md:p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <h2 className="text-lg font-semibold text-gray-900">Current Bill</h2>
@@ -171,7 +177,7 @@ export function DashboardPage() {
           </div>
         </div>
 
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="mt-4 md:mt-6 grid gap-3 md:gap-4 grid-cols-2 lg:grid-cols-5">
           <div className="card p-4">
             <div className="text-xs font-medium text-gray-500 uppercase tracking-wider">
               Total requests
@@ -215,16 +221,16 @@ export function DashboardPage() {
         </div>
       </section>
 
-      {/* API Key Pricing */}
-      <section className="card p-6">
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold text-gray-900">API Key Pricing</h2>
+      {/* API Key Pricing - Responsive grid */}
+      <section className="card p-4 md:p-6">
+        <div className="mb-4 md:mb-6">
+          <h2 className="text-base md:text-lg font-semibold text-gray-900">API Key Pricing</h2>
           <p className="mt-1 text-sm text-gray-600">
             Price per request configuration for each active API key.
           </p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid gap-3 md:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {keys.data!
             .filter((k) => k.status === 'active')
             .map((key) => (
