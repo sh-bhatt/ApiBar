@@ -137,8 +137,8 @@ export function Layout() {
           md:translate-x-0 md:block`}
       >
         <div className="flex flex-col h-full">
-          {/* Logo Section */}
-          <div className="border-b border-white/10 px-6 py-6 flex items-center justify-between">
+          {/* Logo Section - fixed at top */}
+          <div className="flex-shrink-0 border-b border-white/10 px-6 py-6 flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">MF</span>
@@ -157,8 +157,8 @@ export function Layout() {
             </button>
           </div>
 
-          {/* Navigation - takes all available space */}
-          <nav className="flex-1 flex-col gap-1 p-4 overflow-y-auto">
+          {/* Navigation - scrollable if too many items */}
+          <nav className="flex-1 overflow-y-auto py-4 px-2">
             {getNavigationItems().map((item) => {
               const Icon = item.icon
               return (
@@ -182,8 +182,8 @@ export function Layout() {
             })}
           </nav>
 
-          {/* User Profile Section - pushed to bottom */}
-          <div className="mt-auto border-t border-white/10 p-4">
+          {/* User Profile Section - always at bottom, never scrolls away */}
+          <div className="flex-shrink-0 border-t border-white/10 p-4">
             {profile && (
               <div className="flex items-center space-x-3 p-3 bg-white/10 rounded-lg">
                 <div className="w-10 h-10 bg-gradient-to-br from-[#6C63FF] to-[#3B82F6] rounded-full flex items-center justify-center">

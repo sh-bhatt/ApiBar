@@ -1,7 +1,7 @@
 import { Search, Bell, ChevronDown, LogOut, AlertTriangle, AlertCircle, Info, Menu } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { api, clearStoredToken } from '../lib/api'
 
 interface TopNavbarProps {
@@ -30,10 +30,47 @@ interface Notification {
 
 export function TopNavbar({ onMenuClick }: TopNavbarProps = {}) {
   const navigate = useNavigate()
+  const location = useLocation()
   const [searchQuery, setSearchQuery] = useState('')
   const [showNotifications, setShowNotifications] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
   const [readNotifications, setReadNotifications] = useState<Set<string>>(new Set())
+
+  // Refs for click-outside detection
+  const notificationRef = useRef<HTMLDivElement>(null)
+  const profileRef = useRef<HTMLDivElement>(null)
+
+  // Close dropdowns when navigating to another page
+  useEffect(() => {
+    setShowNotifications(false)
+    setShowProfile(false)
+  }, [location.pathname])
+
+  // Click-outside handler for notifications
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+        setShowNotifications(false)
+      }
+    }
+    if (showNotifications) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showNotifications])
+
+  // Click-outside handler for profile
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setShowProfile(false)
+      }
+    }
+    if (showProfile) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showProfile])
 
   async function logout() {
     try {
@@ -144,7 +181,7 @@ export function TopNavbar({ onMenuClick }: TopNavbarProps = {}) {
       {/* Right Side */}
       <div className="flex items-center space-x-4">
         {/* Notifications */}
-        <div className="relative">
+        <div ref={notificationRef} className="relative">
           <button
             onClick={() => setShowNotifications(!showNotifications)}
             className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
@@ -208,7 +245,7 @@ export function TopNavbar({ onMenuClick }: TopNavbarProps = {}) {
         </div>
 
         {/* User Profile */}
-        <div className="relative">
+        <div ref={profileRef} className="relative">
           {profile && (
             <button
               onClick={() => setShowProfile(!showProfile)}
