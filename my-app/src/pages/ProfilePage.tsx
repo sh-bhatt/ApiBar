@@ -55,24 +55,13 @@ function getInitials(name: string) {
     .slice(0, 2)
 }
 
-function formatDate(dateString: string) {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
-}
-
 function formatMemberSince(dateString: string) {
   const date = new Date(dateString)
-  const now = new Date()
-  const years = now.getFullYear() - date.getFullYear()
-  const months = now.getMonth() - date.getMonth()
-  const totalMonths = years * 12 + months
-
-  if (totalMonths < 1) return 'Just joined'
-  if (totalMonths < 12) return `${totalMonths} month${totalMonths === 1 ? '' : 's'}`
-  return `${Math.floor(totalMonths / 12)} year${Math.floor(totalMonths / 12) === 1 ? '' : 's'}`
+  return date.toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  })
 }
 
 export function ProfilePage() {
@@ -278,7 +267,7 @@ export function ProfilePage() {
 
             {/* Member Since */}
             <p className="text-xs text-gray-400">
-              Member since {formatDate(profile.createdAt)}
+              Member since {formatMemberSince(profile.createdAt)}
             </p>
           </div>
         </div>
@@ -431,8 +420,8 @@ export function ProfilePage() {
           <p className="text-sm text-gray-500">APIs Registered</p>
         </div>
         <div className="card p-4 text-center">
-          <p className="text-2xl font-bold text-purple-600">{formatMemberSince(profile.createdAt)}</p>
-          <p className="text-sm text-gray-500">Member Since</p>
+          <p className="text-lg font-bold text-purple-600">{formatMemberSince(profile.createdAt)}</p>
+          <p className="text-sm text-gray-500">Member since</p>
         </div>
         <div className="card p-4 text-center">
           <div className="flex items-center justify-center gap-2 mb-1">
