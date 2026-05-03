@@ -30,12 +30,26 @@ const app = express()
 const PORT = Number(process.env.PORT) || 5000
 
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'http://localhost:5174',
-    'https://api-jeb8cp5gr-shubham-bhatts-projects-c7fefe03.vercel.app',
-    process.env.FRONTEND_URL || ''
-  ].filter(Boolean),
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, Postman)
+    if (!origin) return callback(null, true)
+
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'http://localhost:5174',
+    ]
+
+    // Allow any Vercel subdomain
+    if (origin.endsWith('.vercel.app')) return callback(null, true)
+
+    // Allow specific origins
+    if (allowedOrigins.includes(origin)) return callback(null, true)
+
+    // Allow FRONTEND_URL from env
+    if (process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL) return callback(null, true)
+
+    callback(null, true) // Allow all for now during development
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key']
