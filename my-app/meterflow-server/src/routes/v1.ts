@@ -21,7 +21,7 @@ function getForwardHeaders(req: MeteredGatewayRequest): Record<string, string> {
       continue
     }
 
-    headers[key] = Array.isArray(value) ? value.join(', ') : value
+    headers[key] = Array.isArray(value) ? value.join(', ') : value as string
   }
 
   return headers
