@@ -296,7 +296,7 @@ export function ApisPage() {
                 </div>
               </div>
 
-              <form onSubmit={onSubmit} className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-4">
+              <form id="api-registration-form" onSubmit={onSubmit} className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     API Name
