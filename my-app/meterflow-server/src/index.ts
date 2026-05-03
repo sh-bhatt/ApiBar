@@ -29,7 +29,17 @@ import { startBillingWorker } from './workers/billingWorker'
 const app = express()
 const PORT = Number(process.env.PORT) || 5000
 
-app.use(cors())
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'https://api-jeb8cp5gr-shubham-bhatts-projects-c7fefe03.vercel.app',
+    process.env.FRONTEND_URL || ''
+  ].filter(Boolean),
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key']
+}))
 app.use(express.json())
 
 app.get('/health', (_req, res) => {
