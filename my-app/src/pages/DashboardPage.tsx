@@ -1,4 +1,4 @@
-import { Activity, DollarSign, Clock, KeyRound } from 'lucide-react'
+import { Activity, Clock, KeyRound } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { PageLoader } from '../components/PageLoader'
@@ -13,13 +13,6 @@ import {
   useUsageSummary,
 } from '../hooks/useMeterflowApi'
 import { getQueryErrorMessage } from '../lib/queryError'
-
-function formatUsd(amount: number) {
-  return new Intl.NumberFormat(undefined, {
-    style: 'currency',
-    currency: 'USD',
-  }).format(amount)
-}
 
 function formatInr(amount: number) {
   return new Intl.NumberFormat('en-IN', {
@@ -99,12 +92,6 @@ export function DashboardPage() {
           value={`${s.avgLatencyMs}ms`}
           icon={Clock}
           color="success"
-        />
-        <StatCard
-          title="Estimated Bill"
-          value={formatInr(s.estimatedBillUsd)}
-          icon={DollarSign}
-          color="warning"
         />
       </section>
 

@@ -6,9 +6,6 @@ import type { AuthedRequest } from '../middleware/auth'
 
 const router = Router()
 
-/** USD per 1,000 successful metered requests (placeholder pricing). */
-const PRICE_PER_1K_USD = 0.03
-
 router.get('/summary', async (req, res) => {
   const { userId } = req as unknown as AuthedRequest
   const uid = new mongoose.Types.ObjectId(userId)
@@ -68,15 +65,11 @@ router.get('/summary', async (req, res) => {
   const successRate = totalCalls > 0 ? (successCount / totalCalls) * 100 : 0
   const errorRate = totalCalls > 0 ? (errorCount / totalCalls) * 100 : 0
 
-  const estimatedBillUsd = totalCalls * (PRICE_PER_1K_USD / 1000)
-
   res.json({
     totalCalls,
     avgLatencyMs,
     successRate,
     errorRate,
-    estimatedBillUsd,
-    pricePer1kUsd: PRICE_PER_1K_USD,
   })
 })
 

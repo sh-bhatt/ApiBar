@@ -20,8 +20,6 @@ export type UsageSummaryDto = {
   avgLatencyMs: number
   successRate: number
   errorRate: number
-  estimatedBillUsd: number
-  pricePer1kUsd: number
 }
 
 export type UsageLogDto = {
