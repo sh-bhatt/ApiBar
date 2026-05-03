@@ -11,15 +11,6 @@ interface Tier {
   pricePerRequest: number
 }
 
-interface PricingModel {
-  type: PricingModelType
-  pricePerRequest: number
-  freeTierLimit: number
-  tiers: Tier[]
-  monthlyPrice: number
-  includedRequests: number
-}
-
 export function ApisPage() {
   const apis = useApis()
   const keys = useApiKeys()
@@ -137,22 +128,6 @@ export function ApisPage() {
 
   function updateTier(index: number, field: keyof Tier, value: number) {
     setTiers(tiers.map((tier, i) => i === index ? { ...tier, [field]: value } : tier))
-  }
-
-  function getPricingBadge(api: any) {
-    const model = api.pricingModel?.type || 'per_request'
-    switch (model) {
-      case 'free':
-        return <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Free</span>
-      case 'per_request':
-        return <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Per Request</span>
-      case 'tiered':
-        return <span className="px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">Tiered</span>
-      case 'monthly_flat':
-        return <span className="px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">Monthly</span>
-      default:
-        return null
-    }
   }
 
   if (apis.isLoading || keys.isLoading) {

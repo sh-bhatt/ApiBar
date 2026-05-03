@@ -4,20 +4,16 @@ import { api, clearStoredToken } from '../lib/api'
 import {
   LayoutDashboard,
   Globe,
-  Key,
   BarChart3,
   FileText,
-  Settings,
   LogOut,
-  User,
   UserCircle,
   Shield,
   ChevronDown,
   ShoppingBag,
   Zap,
   Wallet,
-  TrendingUp,
-  DollarSign
+  TrendingUp
 } from 'lucide-react'
 import { TopNavbar } from './TopNavbar'
 

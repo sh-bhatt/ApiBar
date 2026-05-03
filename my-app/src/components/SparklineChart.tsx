@@ -1,8 +1,4 @@
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts'
-
-interface SparklineData {
-  value: number
-}
+import { LineChart, Line, ResponsiveContainer } from 'recharts'
 
 interface SparklineChartProps {
   data: number[]

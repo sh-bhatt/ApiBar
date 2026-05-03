@@ -81,8 +81,8 @@ export function EarningsPage() {
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center gap-3">
           <Wallet className="w-5 h-5 text-blue-600" />
           <p className="text-sm text-blue-800">
-            Platform takes <span className="font-semibold">{(summaryData?.commissionRate * 100).toFixed(0)}%</span> commission, you keep{' '}
-            <span className="font-semibold">{((1 - summaryData?.commissionRate) * 100).toFixed(0)}%</span>
+            Platform takes <span className="font-semibold">{((summaryData?.commissionRate ?? 0.20) * 100).toFixed(0)}%</span> commission, you keep{' '}
+            <span className="font-semibold">{((1 - (summaryData?.commissionRate ?? 0.20)) * 100).toFixed(0)}%</span>
           </p>
         </div>
 

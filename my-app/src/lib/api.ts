@@ -8,13 +8,13 @@ type RetryableRequestConfig = InternalAxiosRequestConfig & {
 }
 
 const refreshClient = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
 })
 
 let refreshPromise: Promise<string | null> | null = null
 
 export const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
 })
 
 api.interceptors.request.use((config) => {
