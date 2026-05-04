@@ -18,6 +18,7 @@ export function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [pending, setPending] = useState(false)
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false)
   const [showForgotPassword, setShowForgotPassword] = useState(false)
   const [resetEmail, setResetEmail] = useState('')
 
@@ -30,7 +31,7 @@ export function LoginPage() {
           headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
         }).then(r => r.json())
 
-        // Send to our backend
+        // Send to our backend (no role needed for login - backend handles existing user or creates with default 'provider')
         const { data } = await api.post('/auth/google', { userInfo })
         setStoredAuthTokens(data.accessToken, data.refreshToken)
         navigate('/dashboard', { replace: true })
@@ -38,9 +39,14 @@ export function LoginPage() {
       } catch (err) {
         toast.error('Failed to login with Google')
         console.error('Google login error:', err)
+      } finally {
+        setIsGoogleLoading(false)
       }
     },
-    onError: () => toast.error('Google login failed')
+    onError: () => {
+      toast.error('Google login failed')
+      setIsGoogleLoading(false)
+    }
   })
 
   // Forgot password handler
@@ -220,7 +226,12 @@ export function LoginPage() {
               disabled={pending}
               className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {pending ? 'Signing in...' : 'Sign in'}
+              {pending ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"/>
+                  Signing in...
+                </div>
+              ) : 'Sign in'}
             </button>
           </form>
 
@@ -234,8 +245,12 @@ export function LoginPage() {
           {/* Social Login Buttons */}
           <div className="mt-6 grid grid-cols-2 gap-3">
             <button
-              onClick={() => googleLogin()}
-              className="flex items-center justify-center space-x-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              onClick={() => {
+                setIsGoogleLoading(true)
+                googleLogin()
+              }}
+              disabled={isGoogleLoading}
+              className="flex items-center justify-center space-x-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>

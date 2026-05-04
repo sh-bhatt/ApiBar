@@ -1,5 +1,5 @@
 import { Search, Bell, ChevronDown, LogOut, AlertTriangle, AlertCircle, Info, Menu } from 'lucide-react'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { api, clearStoredToken } from '../lib/api'
@@ -44,6 +44,7 @@ export function TopNavbar({ onMenuClick }: TopNavbarProps = {}) {
   // Search state
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [showSearchResults, setShowSearchResults] = useState(false)
+  const [isSearching, setIsSearching] = useState(false)
 
   // Close dropdowns when navigating to another page
   useEffect(() => {
@@ -90,34 +91,71 @@ export function TopNavbar({ onMenuClick }: TopNavbarProps = {}) {
     }
   }, [showSearchResults])
 
+  // Debounce helper function
+  function debounce<T extends (...args: any[]) => any>(fn: T, delay: number) {
+    let timer: ReturnType<typeof setTimeout>
+    return (...args: Parameters<T>) => {
+      clearTimeout(timer)
+      timer = setTimeout(() => fn(...args), delay)
+    }
+  }
+
+  // Debounced search function
+  const debouncedSearch = useCallback(
+    debounce(async (query: string) => {
+      if (query.length < 2) {
+        setSearchResults([])
+        setShowSearchResults(false)
+        setIsSearching(false)
+        return
+      }
+
+      setIsSearching(true)
+      try {
+        const [apisRes, marketRes] = await Promise.allSettled([
+          api.get('/apis'),
+          api.get('/marketplace')
+        ])
+
+        const results: any[] = []
+
+        if (apisRes.status === 'fulfilled') {
+          apisRes.value.data
+            .filter((a: any) => a.name?.toLowerCase().includes(query.toLowerCase()))
+            .forEach((a: any) => results.push({
+              type: 'My API',
+              name: a.name,
+              description: a.description,
+              link: '/dashboard/apis'
+            }))
+        }
+
+        if (marketRes.status === 'fulfilled') {
+          marketRes.value.data
+            .filter((m: any) => m.name?.toLowerCase().includes(query.toLowerCase()))
+            .forEach((m: any) => results.push({
+              type: 'Marketplace',
+              name: m.name,
+              description: m.description,
+              link: '/dashboard/marketplace'
+            }))
+        }
+
+        setSearchResults(results)
+        setShowSearchResults(true)
+      } catch (err) {
+        console.error('Search error:', err)
+      } finally {
+        setIsSearching(false)
+      }
+    }, 300),
+    []
+  )
+
   // Handle search query
-  const handleSearch = async (query: string) => {
+  const handleSearch = (query: string) => {
     setSearchQuery(query)
-    if (query.length < 2) {
-      setSearchResults([])
-      setShowSearchResults(false)
-      return
-    }
-
-    try {
-      // Search across APIs, keys, and marketplace
-      const [apisRes, keysRes, marketRes] = await Promise.all([
-        api.get(`/apis?search=${query}`),
-        api.get(`/keys?search=${query}`),
-        api.get(`/marketplace?search=${query}`)
-      ])
-
-      const results = [
-        ...apisRes.data.map((a: any) => ({ type: 'API', name: a.name, link: '/dashboard/apis', id: a.id })),
-        ...keysRes.data.map((k: any) => ({ type: 'Key', name: k.name, link: '/dashboard/my-apis', id: k.id })),
-        ...marketRes.data.map((m: any) => ({ type: 'Marketplace', name: m.name, link: '/dashboard/marketplace', id: m.id }))
-      ].filter(r => r.name.toLowerCase().includes(query.toLowerCase()))
-
-      setSearchResults(results)
-      setShowSearchResults(true)
-    } catch (err) {
-      console.error('Search failed:', err)
-    }
+    debouncedSearch(query)
   }
 
   async function logout() {
@@ -210,38 +248,54 @@ export function TopNavbar({ onMenuClick }: TopNavbarProps = {}) {
       {/* Search Bar - Hidden on mobile, shown on md+ */}
       <div ref={searchRef} className="hidden md:block flex-1 max-w-xl mx-8 relative">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             type="text"
             placeholder="Search APIs, keys, or documentation..."
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6C63FF] focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
+          {isSearching && (
+            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+              <div className="w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"/>
+            </div>
+          )}
         </div>
 
-        {/* Search results dropdown */}
-        {showSearchResults && searchResults.length > 0 && (
-          <div className="absolute top-full left-0 right-0 bg-white rounded-lg shadow-lg mt-1 z-50 max-h-64 overflow-y-auto border border-gray-200">
-            {searchResults.map((result, i) => (
-              <div
-                key={i}
-                onClick={() => {
-                  navigate(result.link)
-                  setShowSearchResults(false)
-                  setSearchQuery('')
-                }}
-                className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer border-b last:border-0"
-              >
-                <span className="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded">{result.type}</span>
-                <span className="text-sm text-gray-700">{result.name}</span>
+        {showSearchResults && (
+          <div className="absolute top-full left-0 right-0 bg-white rounded-xl shadow-xl mt-2 z-50 max-h-80 overflow-y-auto border">
+            {searchResults.length === 0 ? (
+              <div className="px-4 py-6 text-center text-gray-400 text-sm">
+                No results found for '{searchQuery}'
               </div>
-            ))}
-          </div>
-        )}
-        {showSearchResults && searchResults.length === 0 && searchQuery.length >= 2 && (
-          <div className="absolute top-full left-0 right-0 bg-white rounded-lg shadow-lg mt-1 z-50 border border-gray-200">
-            <div className="px-4 py-3 text-sm text-gray-500">No results found</div>
+            ) : (
+              searchResults.map((result, i) => (
+                <div
+                  key={i}
+                  onClick={() => {
+                    navigate(result.link)
+                    setShowSearchResults(false)
+                    setSearchQuery('')
+                  }}
+                  className="flex items-start gap-3 px-4 py-3 hover:bg-purple-50 cursor-pointer border-b last:border-0 transition-colors"
+                >
+                  <span className={`text-xs px-2 py-1 rounded-full font-medium flex-shrink-0 mt-0.5 ${
+                    result.type === 'My API'
+                      ? 'bg-purple-100 text-purple-600'
+                      : 'bg-blue-100 text-blue-600'
+                  }`}>
+                    {result.type}
+                  </span>
+                  <div>
+                    <div className="text-sm font-medium text-gray-800">{result.name}</div>
+                    {result.description && (
+                      <div className="text-xs text-gray-400 mt-0.5 line-clamp-1">{result.description}</div>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         )}
       </div>
